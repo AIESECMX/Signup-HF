@@ -12,20 +12,20 @@ wp_enqueue_script('jquery');
 
 defined( 'ABSPATH' ) or die( 'Plugin file cannot be accessed directly.' );
 
-function load_scripts($palette = "--aiesec-color") {
-  wp_enqueue_script('signup-main',plugins_url('js/signup_main.js',__FILE__),array('jquery'));
+// function load_scripts($palette = "--aiesec-color") {
+//   wp_enqueue_script('signup-main',plugins_url('js/signup_main.js',__FILE__),array('jquery'));
 
-  wp_localize_script('signup-main','wp_data',array(
-    'allocationUrl' => plugins_url('model/ur_allocation.php',__FILE__),
-    'palette' => $palette,
-  ));
+//   wp_localize_script('signup-main','wp_data',array(
+//     'allocationUrl' => plugins_url('model/ur_allocation.php',__FILE__),
+//     'palette' => $palette,
+//   ));
 
-  wp_enqueue_script('signup-allocations',plugins_url('js/ur_allocation1.1.js',__FILE__),array('signup-main'),null);
-  wp_enqueue_style('purecss','https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/pure-min.css');
-  wp_enqueue_style('singup-style',plugins_url('css/signupform.css',__FILE__));
-}
+//   wp_enqueue_script('signup-allocations',plugins_url('js/ur_allocation1.1.js',__FILE__),array('signup-main'),null);
+//   wp_enqueue_style('purecss','https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/pure-min.css');
+//   wp_enqueue_style('singup-style',plugins_url('css/signupform.css',__FILE__));
+// }
 
-function getForm($product = "",$configs = null) {
+function getFormHF($product = "",$configs = null) {
   //Get File
   $form = file_get_contents('form.html',TRUE);
   
@@ -43,7 +43,7 @@ function getForm($product = "",$configs = null) {
   return $form;
 }
 
-function getFormWithError($form,$code) {
+function getFormWithErrorHF($form,$code) {
   $msg = null;
   switch($code) {
     case "email":
@@ -65,7 +65,7 @@ function getFormWithError($form,$code) {
 }
 
 //General Sign-up Form
-function signup_form( $atts ) {
+function signup_form_hf( $atts ) {
     load_scripts();
 
     //This part is legacy, better leave it as is
@@ -74,19 +74,17 @@ function signup_form( $atts ) {
     ), $atts );
 
     $configs = include('config.php');
-    $form = getForm("",$configs);
+    $form = getFormHF("",$configs);
     
     //Legacy: Better leave it "as is"
     if(isset($_GET["thank_you"]) && $_GET["thank_you"]==="true") {
       return $configs["thank-you-message"]; 
     }
     if (isset($_REQUEST['error'])) {
-      return getFormWithError($form,$_REQUEST['error']);    
+      return getFormWithErrorHF($form,$_REQUEST['error']);    
     }
 
     return $form;
 
 }
-add_shortcode('signup-form-hf', 'signup_form-hf');
-
-
+add_shortcode('signup-form-hf', 'signup_form_hf');
